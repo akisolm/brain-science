@@ -107,3 +107,21 @@ header {
     color: var(--muted-color);
     font-style: italic;
 }
+
+#tooltip {
+  position: absolute;
+  max-width: 240px;
+  padding: 10px 14px;
+  background: #fefefe;                /* 柔和白色 */
+  color: #222;                        /* 深灰接近黑色的字体颜色 */
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 轻柔阴影 */
+  border: 1px solid #ccc;            /* 中性灰边框 */
+  pointer-events: none;
+  display: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+

@@ -14,14 +14,14 @@ function clearChart() {
 // 绘制 Fig1 的函数（内部也可修改标题，视需求而定）
 function showFig1() {
   clearChart();
-  titleEl.text('y = sin(x)');   // 更新标题
+  titleEl.text('Classification Schemes');   // 更新标题
   drawFig1(chartDiv);
 }
 
 // 绘制 Fig2 的函数
 function showFig2() {
   clearChart();
-  titleEl.text('Trends in cross-domain scholarship in Human Brain Science');   // 更新标题
+  titleEl.text('Trends in Cross-domain Scholarship in Human Brain Science');   // 更新标题
   drawFig2(chartDiv);
 }
 
