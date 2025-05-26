@@ -120,13 +120,13 @@ export async function drawFig2(container) {
     const yAxisG = svg.append('g')
       .call(d3.axisLeft(y));
 
-    // 标题
-    svg.append('text')
-      .attr('x', width / 2)
-      .attr('y', -margin.top / 2)
-      .attr('text-anchor', 'middle')
-      .style('font-weight', 'bold')
-      .text(title);
+    // // 标题
+    // svg.append('text')
+    //   .attr('x', width / 2)
+    //   .attr('y', -margin.top / 2)
+    //   .attr('text-anchor', 'middle')
+    //   .style('font-weight', 'bold')
+    //   .text(title);
 
     // 生成 line generator
     const lineGen = d3.line()
@@ -219,7 +219,7 @@ export async function drawFig2(container) {
       g.append('text')
         .attr('x', 16)
         .attr('y', 10)
-        .text(`${n} 类别`);
+        .text(`#${n}`);
     });
   }
 

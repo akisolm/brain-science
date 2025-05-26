@@ -21,7 +21,7 @@ function showFig1() {
 // 绘制 Fig2 的函数
 function showFig2() {
   clearChart();
-  titleEl.text('随机条形图');   // 更新标题
+  titleEl.text('Trends in cross-domain scholarship in Human Brain Science');   // 更新标题
   drawFig2(chartDiv);
 }
 
