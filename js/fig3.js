@@ -1,6 +1,6 @@
 // fig3.js
 export function drawFig3(container) {
-  // 比如画一组随机条形图
+    // 比如画一组随机条形图
   const width = 500, height = 300;
   const svg = container.append('svg')
     .attr('width', width)
