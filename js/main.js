@@ -28,14 +28,14 @@ function showFig2() {
 // 绘制 Fig3 的函数
 function showFig3() {
   clearChart();
-  titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters.');   // 更新标题
+  titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters');   // 更新标题
   drawFig3();
 }
 
 // 绘制 Fig4 的函数
 function showFig4() {
   clearChart();
-  titleEl.text('Fig4：随机条形图');   // 更新标题
+  titleEl.text('Evolution of CIP and SA diversity in Human Brain Science research');   // 更新标题
   drawFig4(chartDiv);
 }
 
