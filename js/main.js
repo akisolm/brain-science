@@ -28,7 +28,7 @@ function showFig2() {
 // 绘制 Fig3 的函数
 function showFig3() {
   clearChart();
-  titleEl.text('Fig3：随机条形图');   // 更新标题
+  titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters.');   // 更新标题
   drawFig3();
 }
 
