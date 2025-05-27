@@ -1,7 +1,7 @@
 export function drawFig3() {
   async function loadAndProcessData() {
     try {
-        const data = await d3.csv('../data/ArticleLevelData_quanli.csv');
+        const data = await d3.csv('./data/ArticleLevelData_quanli.csv');
 
         // 定义年份分组函数
         const yearGroup = (year) => {
