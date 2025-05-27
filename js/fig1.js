@@ -8,8 +8,8 @@ export function drawFig1(container) {
   const tooltip = d3.select("#tooltip");
 
   const originalLabels = {
-    "Publication": "Initial sequencing and analysis of the human genome",
-    "Authors": "International Human Genome Sequencing Consortium",
+    "Publication": "Publication",
+    "Authors": "Authors",
     "MeSH Keywords": "MeSH Keywords",
     "Discipline Classification": "Discipline Classification",
     "Topic Classification": "Topic Classification",
@@ -18,35 +18,35 @@ export function drawFig1(container) {
   };
 
   const newLabels = {
-    "Publication": "文献",
-    "Authors": "作者",
-    "MeSH Keywords": "关键词",
-    "Discipline Classification": "学科分类",
-    "Topic Classification": "主题分类",
-    "Region Classification": "区域分类",
-    "Integration Type": "整合类型"
+    "Publication": "<Title (DOI)>",
+    "Authors": "N_Authors=257",
+    "MeSH Keywords": "<Keywords>",
+    "Discipline Classification": "[0 0 1 0 1 1]",
+    "Topic Classification": "[0 0 0 2 1 1 1 1 0]",
+    "Region Classification": "[7 3 0 1]",
+    "Integration Type": "[X X]"
   };
 
   const newTooltips = {
-    "文献": "这是一个学术文献",
-    "作者": "研究文章的作者们",
-    "关键词": "医学主题词",
-    "学科分类": "对应学科",
-    "主题分类": "研究主题",
-    "区域分类": "研究涉及的地理区域",
-    "整合类型": "不同信息的整合方式"
+    "<Title (DOI)>": "Initial sequencing and analysis of the human genome (10.1038/35057062)",
+    "N_Authors=257": "International Human Genome Sequencing Consortium",
+    "<Keywords>": "Animals, Chromosome Mapping, Conserved Sequence, CpG Islands, DNA Transposable Elements, Databases, Factual...",
+    "[0 0 1 0 1 1]": "CIP4=2, CIP5=1, CIP6=1, CIP7=1, CIP8=1",
+    "[0 0 0 2 1 1 1 1 0]": "SA3=1, SA5=1, SA6=1",
+    "[7 3 0 1]": "KR1=7, KR2=3, KR4=1",
+    "[X X]": "Multi-Discipline and Multi-Topic"
   };
 
   let toggled = false;
 
   const nodes = [
-    { id: "Publication", x: 140, y: 240, tooltip: "article" },
-    { id: "Authors", x: 360, y: 140 },
-    { id: "MeSH Keywords", x: 360, y: 340 },
-    { id: "Discipline Classification", x: 600, y: 140 },
-    { id: "Topic Classification", x: 600, y: 340 },
-    { id: "Region Classification", x: 600, y: 240 },
-    { id: "Integration Type", x: 860, y: 240 }
+    { id: "Publication", x: 140, y: 240, tooltip:"<WOS API>" },
+    { id: "Authors", x: 360, y: 140, tooltip:"Scientist's Profile <Scopus API>"},
+    { id: "MeSH Keywords", x: 360, y: 340, tooltip:"<PubMed API>" },
+    { id: "Discipline Classification", x: 600, y: 140, tooltip:"CIP Taxonomy" },
+    { id: "Topic Classification", x: 600, y: 340, tooltip:"MeSH Taxonomy" },
+    { id: "Region Classification", x: 600, y: 240, tooltip:"Geo Taxonomy" },
+    { id: "Integration Type", x: 860, y: 240, tooltip:"M/M X/M M/X X/X" }
   ];
 
   const links = [
@@ -139,7 +139,7 @@ export function drawFig1(container) {
     .attr("text-anchor", "middle")
     .attr("font-size", "14px")
     .attr("fill", "#000")
-    .text("切换文字");
+    .text("see Example");
 
   buttonGroup.on("click", () => {
     toggled = !toggled;
@@ -148,6 +148,6 @@ export function drawFig1(container) {
       d.tooltip = toggled ? newTooltips[label] : d.tooltip;
       return label;
     });
-    buttonText.text(toggled ? "切换回英文" : "切换文字");
+    buttonText.text(toggled ? "see Defination" : "see Example");
   });
 }
