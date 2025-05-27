@@ -29,7 +29,7 @@ function showFig2() {
 function showFig3() {
   clearChart();
   titleEl.text('Fig3：随机条形图');   // 更新标题
-  drawFig3(chartDiv);
+  drawFig3();
 }
 
 // 绘制 Fig4 的函数
