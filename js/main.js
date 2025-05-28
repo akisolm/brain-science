@@ -36,7 +36,7 @@ function showFig3() {
   clearChart();
   titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters');
   // 保存CIP按钮容器的引用
-  cipButtonContainer = d3.select('body').insert('div', '.chart-area').attr('class', 'cip-button-container');
+  cipButtonContainer = d3.select('.chart-area').insert('div', '#chart').attr('class', 'cip-button-container');
   cipButtonContainer.style('text-align', 'center');
   drawFig3(chartDiv, cipButtonContainer); // 将容器作为参数传递给fig3
 }
