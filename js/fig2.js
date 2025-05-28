@@ -9,9 +9,9 @@ export async function drawFig2(container) {
   }
 
   // 加载并过滤数据（替换 NaN，保留 1980 年及以后）
-  let saData = await loadSafeJson('sa_data.json');
+  let saData = await loadSafeJson('data/fig2a_sa_data.json');
   saData = saData.filter(d => d.year >= 1980);
-  let cipData = await loadSafeJson('cip_data.json');
+  let cipData = await loadSafeJson('data/fig2a_cip_data.json');
   cipData = cipData.filter(d => d.year >= 1980);
 
   // 公共布局参数

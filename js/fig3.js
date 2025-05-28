@@ -1,59 +1,60 @@
 export function drawFig3(chartDiv, buttonContainer) {
   async function loadAndProcessData() {
     try {
-        const data = await d3.csv('../data/ArticleLevelData_quanli.csv');
+        // const data = await d3.csv('data/ArticleLevelData_quanli.csv');
+        const processedData = await d3.json('data/fig3_data.json');
 
-        // 定义年份分组函数
-        const yearGroup = (year) => {
-            if (year >= 1970 && year <= 1974) return '1970 - 1974';
-            if (year >= 1975 && year <= 1979) return '1975 - 1979';
-            if (year >= 1980 && year <= 1984) return '1980 - 1984';
-            if (year >= 1985 && year <= 1989) return '1985 - 1989';
-            if (year >= 1990 && year <= 1994) return '1990 - 1994';
-            if (year >= 1995 && year <= 1999) return '1995 - 1999';
-            if (year >= 2000 && year <= 2004) return '2000 - 2004';
-            if (year >= 2005 && year <= 2009) return '2005 - 2009';
-            if (year >= 2010 && year <= 2014) return '2010 - 2014';
-            if (year >= 2015 && year <= 2018) return '2015 - 2018';
-            return 'Other';
-        };
+        // // 定义年份分组函数
+        // const yearGroup = (year) => {
+        //     if (year >= 1970 && year <= 1974) return '1970 - 1974';
+        //     if (year >= 1975 && year <= 1979) return '1975 - 1979';
+        //     if (year >= 1980 && year <= 1984) return '1980 - 1984';
+        //     if (year >= 1985 && year <= 1989) return '1985 - 1989';
+        //     if (year >= 1990 && year <= 1994) return '1990 - 1994';
+        //     if (year >= 1995 && year <= 1999) return '1995 - 1999';
+        //     if (year >= 2000 && year <= 2004) return '2000 - 2004';
+        //     if (year >= 2005 && year <= 2009) return '2005 - 2009';
+        //     if (year >= 2010 && year <= 2014) return '2010 - 2014';
+        //     if (year >= 2015 && year <= 2018) return '2015 - 2018';
+        //     return 'Other';
+        // };
 
-        // 定义 CIP 列和 SA 列
-        const cipColumns = ['CIP1', 'CIP2', 'CIP3', 'CIP4', 'CIP5', 'CIP6', 'CIP7', 'CIP8', 'CIP9'];
-        const saColumns = ['SA1', 'SA2', 'SA3', 'SA4', 'SA5', 'SA6'];
+        // // 定义 CIP 列和 SA 列
+        // const cipColumns = ['CIP1', 'CIP2', 'CIP3', 'CIP4', 'CIP5', 'CIP6', 'CIP7', 'CIP8', 'CIP9'];
+        // const saColumns = ['SA1', 'SA2', 'SA3', 'SA4', 'SA5', 'SA6'];
 
-        // 按 CIP 列和年份分组计算 SA 比例
-        const processedData = {};
-        cipColumns.forEach(cip => {
-            const cipData = data.filter(d => d[cip] === '1');
-            const groupedByYear = d3.group(cipData, d => yearGroup(+d.Yp));
-            const yearGroupData = [];
-            groupedByYear.forEach((group, year) => {
-                // 过滤掉年份分组为 'Other' 的数据
-                if (year !== 'Other') {
-                    const saTotals = {};
-                    saColumns.forEach(sa => {
-                        saTotals[sa] = d3.sum(group, d => +d[sa]);
-                    });
-                    const total = d3.sum(Object.values(saTotals));
-                    const percentages = {};
-                    saColumns.forEach(sa => {
-                        percentages[sa] = total > 0 ? saTotals[sa] / total : 0;
-                    });
-                    yearGroupData.push({ year, ...percentages });
-                }
-            });
-            // 对每个 CIP 的年份分组数据按年份顺序排序
-            const yearOrder = [
-                '1970 - 1974', '1975 - 1979', '1980 - 1984',
-                '1985 - 1989', '1990 - 1994', '1995 - 1999',
-                '2000 - 2004', '2005 - 2009', '2010 - 2014',
-                '2015 - 2018'
-            ];
-            yearGroupData.sort((a, b) => yearOrder.indexOf(a.year) - yearOrder.indexOf(b.year));
+        // // 按 CIP 列和年份分组计算 SA 比例
+        // const processedData = {};
+        // cipColumns.forEach(cip => {
+        //     const cipData = data.filter(d => d[cip] === '1');
+        //     const groupedByYear = d3.group(cipData, d => yearGroup(+d.Yp));
+        //     const yearGroupData = [];
+        //     groupedByYear.forEach((group, year) => {
+        //         // 过滤掉年份分组为 'Other' 的数据
+        //         if (year !== 'Other') {
+        //             const saTotals = {};
+        //             saColumns.forEach(sa => {
+        //                 saTotals[sa] = d3.sum(group, d => +d[sa]);
+        //             });
+        //             const total = d3.sum(Object.values(saTotals));
+        //             const percentages = {};
+        //             saColumns.forEach(sa => {
+        //                 percentages[sa] = total > 0 ? saTotals[sa] / total : 0;
+        //             });
+        //             yearGroupData.push({ year, ...percentages });
+        //         }
+        //     });
+        //     // 对每个 CIP 的年份分组数据按年份顺序排序
+        //     const yearOrder = [
+        //         '1970 - 1974', '1975 - 1979', '1980 - 1984',
+        //         '1985 - 1989', '1990 - 1994', '1995 - 1999',
+        //         '2000 - 2004', '2005 - 2009', '2010 - 2014',
+        //         '2015 - 2018'
+        //     ];
+        //     yearGroupData.sort((a, b) => yearOrder.indexOf(a.year) - yearOrder.indexOf(b.year));
 
-            processedData[cip] = yearGroupData;
-        });
+        //     processedData[cip] = yearGroupData;
+        // });
 
         return processedData;
     } catch (error) {
