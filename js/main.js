@@ -4,17 +4,14 @@ import { drawFig3 } from './fig3.js';
 import { drawFig4 } from './fig4.js';
 
 const chartDiv = d3.select('#chart');
-const titleEl  = d3.select('#chart-title');
+const titleEl = d3.select('#chart-title');
 let cipButtonContainer = null; // 用于存储CIP按钮容器的引用
+let abButtonContainer = null; // 用于存储A、B按钮容器的引用
 
 // 清空容器
 function clearChart() {
   chartDiv.selectAll('*').remove();
-  // 移除CIP按钮容器（如果存在）
-  if (cipButtonContainer) {
-    cipButtonContainer.remove();
-    cipButtonContainer = null;
-  }
+  d3.selectAll('.ab-button-container, .cip-button-container, .sankey-button-container').remove();
 }
 
 // 绘制 Fig1 的函数
@@ -33,12 +30,18 @@ function showFig2() {
 
 // 绘制 Fig3 的函数
 function showFig3() {
-  clearChart();
-  titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters');
-  // 保存CIP按钮容器的引用
-  cipButtonContainer = d3.select('.chart-area').insert('div', '#chart').attr('class', 'cip-button-container');
-  cipButtonContainer.style('text-align', 'center');
-  drawFig3(chartDiv, cipButtonContainer); // 将容器作为参数传递给fig3
+    clearChart();
+    titleEl.text('Evolution of SA boundary-crossing within and across disciplinary clusters');
+    
+    // 在title前面插入A、B按钮容器
+    const abButtonContainer = d3.select('.chart-area').insert('div', '#chart-title').attr('class', 'ab-button-container');
+    abButtonContainer.style('text-align', 'left');
+    
+    // 创建CIP按钮容器
+    const cipButtonContainer = d3.select('.chart-area').insert('div', '#chart').attr('class', 'cip-button-container');
+    cipButtonContainer.style('text-align', 'center');
+    
+    drawFig3(chartDiv, abButtonContainer, cipButtonContainer); // 将容器作为参数传递给fig3
 }
 
 // 绘制 Fig4 的函数
