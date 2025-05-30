@@ -5,8 +5,6 @@ import { drawFig4 } from './fig4.js';
 
 const chartDiv = d3.select('#chart');
 const titleEl = d3.select('#chart-title');
-let cipButtonContainer = null; // 用于存储CIP按钮容器的引用
-let abButtonContainer = null; // 用于存储A、B按钮容器的引用
 
 // 清空容器
 function clearChart() {
