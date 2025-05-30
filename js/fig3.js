@@ -121,27 +121,29 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
 
       const colorMap = {
          // CIP 颜色
-         "CIP1": "#1f77b4",
-         "CIP2": "#ff7f0e",
-         "CIP3": "#2ca02c",
-         "CIP4": "#d62728",
-         "CIP5": "#9467bd",
-         "CIP6": "#8c564b",
-         "CIP7": "#e377c2",
-         "CIP8": "#7f7f7f",
-         "CIP9": "#bcbd22",
+         "CIP1": "#E50404",
+         "CIP2": "#F8950A",
+         "CIP3": "#FEC671",
+         "CIP4": "#FCF284",
+         "CIP5": "#0D8905",
+         "CIP6": "#26C358",
+         "CIP7": "#82EEB6",
+         "CIP8": "#777676",
+         "CIP9": "#AFAAAA",
 
          // SA 颜色
-         "SA1": "#aec7e8",
-         "SA2": "#ffbb78",
-         "SA3": "#98df8a",
-         "SA4": "#ff9896",
-         "SA5": "#c5b0d5",
-         "SA6": "#c49c94",
+         "SA1": '#d90202',
+         "SA2": '#ff8247',
+         "SA3": '#2af768',
+         "SA4": '#0f730b',
+         "SA5": '#030303',
+         "SA6": '#9e9e9e'
       };
 
+      const whiteTextNodes = ['CIP1','SA1','CIP5','CIP8','CIP9',"SA4",'SA5'];
+
       const sankey = d3.sankey()
-         .nodeWidth(15)
+         .nodeWidth(50)
          .nodePadding(0)
          .extent([[1, 1], [width - 1, height - 6]]);
 
@@ -200,7 +202,8 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
             .data(graph.links)
             .join("path")
             .attr("d", d3.sankeyLinkHorizontal())
-            .attr("stroke-width", d => Math.max(1, d.width))
+            // .attr('d', customLinkHorizontal())
+            .attr("stroke-width", d => Math.max(0.5, d.width * 0.6))
             .attr("class", "link")
             .attr("stroke", d => colorMap[d.source.name])
             .attr("stroke-opacity", 0.7);
@@ -211,10 +214,19 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
             .data(graph.nodes)
             .join("text")
             .filter((d, i) => nodeConnections.get(i)) // 过滤掉没有连接的节点
-            .attr("x", d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6)
+            .attr("x", d => {
+               // 判断是左侧还是右侧节点
+               const isLeftNode = d.x0 < width / 2;
+               // 左侧节点标签放在左侧，右侧节点标签放在右侧
+               return isLeftNode ? d.x0 + 10 : d.x1 - 12;
+            })
             .attr("y", d => (d.y1 + d.y0) / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
+            .attr('font-weight', 'bold')
+            .attr('font-size', '14px')
+            .attr('font-style', 'normal')
+            .attr("fill", d => whiteTextNodes.includes(d.name) ? "white" : "black") // 设置文本颜色
             .text(d => d.name);
       }
 
@@ -280,6 +292,8 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
                      drawStackedBarChart(processedData[cip], chartDiv);
                      cipButtonContainer.selectAll('button').classed('selected', false);
                      handleButtonClick(d3.select(this));
+                     // 更新标题，显示当前选择的CIP
+                     d3.select('#chart-title').text(`Evolution of SA boundary-crossing within and across disciplinary clusters`);
                   });
             });
 
@@ -288,7 +302,12 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
                drawStackedBarChart(processedData.CIP1, chartDiv);
                const firstButton = cipButtonContainer.select('button');
                handleButtonClick(firstButton);
+
+               d3.select('#chart-title').text('Evolution of SA boundary-crossing within and across disciplinary clusters');
             }
+
+            abButtonContainer.selectAll('button').classed('selected', false);
+            d3.select(this).classed('selected', true);
          });
 
       const buttonB = abButtonContainer.append('button')
@@ -297,10 +316,17 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
             chartDiv.html(''); // 清空之前的图表
             cipButtonContainer.html(''); // 清空CIP按钮
             drawSankeyDiagrams(chartDiv);
+
+            abButtonContainer.selectAll('button').classed('selected', false);
+            d3.select(this).classed('selected', true);
+
+            // 更新标题为B图表的标题
+            d3.select('#chart-title').text('Empirical CIP-SA association networks');
          });
 
       // 默认显示 A 图表
       buttonA.dispatch('click');
+      buttonA.classed('selected', true); // 初始选中 A 按钮
    }
 
    // 调用主函数
