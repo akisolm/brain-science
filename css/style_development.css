@@ -1,7 +1,41 @@
+.link {
+    fill: none;
+}
+
+.ab-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.ab-button-container button {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    width: 5%;
+    height: 5%;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.ab-button-container button:hover {
+    background-color: #a0bae5;
+    cursor: pointer;
+}
+
+.ab-button-container button.selected {
+    background-color: #577da9;
+    color: white;
+    /* border-color: white; */
+}
+
+.cip-button-container {
+    margin: 1%;
+}
+
 .cip-button-container button {
     margin: 0 5px;
     width: 5%;
-    height: 50px;
+    height: 30px;
     font-weight: bold;
     font-size: 16px;
     border-radius: 10px;
@@ -29,12 +63,31 @@
 .cip-button-container :nth-child(8):hover { transform: scale(1.1);}
 .cip-button-container :nth-child(9):hover { transform: scale(1.1);}
 
-.cip-button-container :nth-child(1).select { transform: scale(1.1);}
-.cip-button-container :nth-child(2).select { transform: scale(1.1);}
-.cip-button-container :nth-child(3).select { transform: scale(1.1);}
-.cip-button-container :nth-child(4).select { transform: scale(1.1);}
-.cip-button-container :nth-child(5).select { transform: scale(1.1);}
-.cip-button-container :nth-child(6).select { transform: scale(1.1);}
-.cip-button-container :nth-child(7).select { transform: scale(1.1);}
-.cip-button-container :nth-child(8).select { transform: scale(1.1);}
-.cip-button-container :nth-child(9).select { transform: scale(1.1);}
+.cip-button-container button.selected {
+    transform: scale(1.2);
+}
+
+.sankey-button-container {
+    margin: 1%;
+}
+
+.sankey-button-container button {
+    margin: 0 5px;
+    width: 15%;
+    height: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+.sankey-button-container button:hover {
+    background-color: rgb(187, 195, 202);
+}
+
+.sankey-button-container button.selected {
+  background-color: #2d69a9; /* 选中时的背景颜色 */
+  color: white; /* 选中时的文字颜色 */
+}
