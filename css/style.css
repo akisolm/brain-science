@@ -21,6 +21,10 @@ header {
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
+    z-index: 9999;
+    position: fixed;
+    width: 100%;
+    height: 35px;
 }
 
 .nav-container {
@@ -105,12 +109,32 @@ header {
     align-items: center;
     justify-content: center;
     color: var(--muted-color);
-    font-style: italic;
 }
+
+#explanation {
+  /* 基础布局 */
+  display: block;
+  width: 100%;
+  max-width: 950px;
+  margin: 1.5rem auto;
+  padding: 1rem 2rem;
+  /* 字体设置 */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #333;
+  text-align: justify;
+  text-justify: inter-character;
+  /* 阴影*/
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 首行缩进 */
+  text-indent: 2em;
+}
+
 
 #tooltip {
   position: absolute;
-  max-width: 240px;
+  max-width: 400px;
   padding: 10px 14px;
   background: #fefefe;                /* 柔和白色 */
   color: #222;                        /* 深灰接近黑色的字体颜色 */
@@ -123,5 +147,46 @@ header {
   display: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 1000;
+  white-space: pre-line;
 }
 
+.cip-button-container button {
+    margin: 0 5px;
+    width: 5%;
+    height: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.cip-button-container :nth-child(1) { background-color: rgb(229, 4, 4); }
+.cip-button-container :nth-child(2) { background-color: rgb(248, 149, 10); }
+.cip-button-container :nth-child(3) { background-color: rgb(254, 198, 113); }
+.cip-button-container :nth-child(4) { background-color: rgb(252, 242, 132); }
+.cip-button-container :nth-child(5) { background-color: rgb(13, 137, 5); }
+.cip-button-container :nth-child(6) { background-color: rgb(38, 195, 88); }
+.cip-button-container :nth-child(7) { background-color: rgb(130, 238, 182); }
+.cip-button-container :nth-child(8) { background-color: rgb(119, 118, 118); }
+.cip-button-container :nth-child(9) { background-color: rgb(175, 174, 174); }
+
+.cip-button-container :nth-child(1):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(2):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(3):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(4):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(5):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(6):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(7):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(8):hover { transform: scale(1.1);}
+.cip-button-container :nth-child(9):hover { transform: scale(1.1);}
+
+.cip-button-container :nth-child(1).select { transform: scale(1.1);}
+.cip-button-container :nth-child(2).select { transform: scale(1.1);}
+.cip-button-container :nth-child(3).select { transform: scale(1.1);}
+.cip-button-container :nth-child(4).select { transform: scale(1.1);}
+.cip-button-container :nth-child(5).select { transform: scale(1.1);}
+.cip-button-container :nth-child(6).select { transform: scale(1.1);}
+.cip-button-container :nth-child(7).select { transform: scale(1.1);}
+.cip-button-container :nth-child(8).select { transform: scale(1.1);}
+.cip-button-container :nth-child(9).select { transform: scale(1.1);}
