@@ -88,16 +88,18 @@ header {
 .chart-area {
     background-color: var(--card-color);
     padding: 40px;
+    padding-top: 30px;
     border-radius: 10px;
     margin: 20px auto;
     max-width: 1000px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.chart-area h3 {
+#chart-title {
     color: var(--primary-color);
     text-align: center;
-    margin-bottom: 25px;
+    margin-top: 0;
+    margin-bottom: 2%;
 }
 
 #chart {
@@ -149,44 +151,3 @@ header {
   z-index: 1000;
   white-space: pre-line;
 }
-
-.cip-button-container button {
-    margin: 0 5px;
-    width: 5%;
-    height: 50px;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 10px;
-    transition: transform 0.3s;
-    cursor: pointer;
-}
-
-.cip-button-container :nth-child(1) { background-color: rgb(229, 4, 4); }
-.cip-button-container :nth-child(2) { background-color: rgb(248, 149, 10); }
-.cip-button-container :nth-child(3) { background-color: rgb(254, 198, 113); }
-.cip-button-container :nth-child(4) { background-color: rgb(252, 242, 132); }
-.cip-button-container :nth-child(5) { background-color: rgb(13, 137, 5); }
-.cip-button-container :nth-child(6) { background-color: rgb(38, 195, 88); }
-.cip-button-container :nth-child(7) { background-color: rgb(130, 238, 182); }
-.cip-button-container :nth-child(8) { background-color: rgb(119, 118, 118); }
-.cip-button-container :nth-child(9) { background-color: rgb(175, 174, 174); }
-
-.cip-button-container :nth-child(1):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(2):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(3):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(4):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(5):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(6):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(7):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(8):hover { transform: scale(1.1);}
-.cip-button-container :nth-child(9):hover { transform: scale(1.1);}
-
-.cip-button-container :nth-child(1).select { transform: scale(1.1);}
-.cip-button-container :nth-child(2).select { transform: scale(1.1);}
-.cip-button-container :nth-child(3).select { transform: scale(1.1);}
-.cip-button-container :nth-child(4).select { transform: scale(1.1);}
-.cip-button-container :nth-child(5).select { transform: scale(1.1);}
-.cip-button-container :nth-child(6).select { transform: scale(1.1);}
-.cip-button-container :nth-child(7).select { transform: scale(1.1);}
-.cip-button-container :nth-child(8).select { transform: scale(1.1);}
-.cip-button-container :nth-child(9).select { transform: scale(1.1);}
