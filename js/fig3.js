@@ -140,7 +140,7 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
          "SA6": '#9e9e9e'
       };
 
-      const whiteTextNodes = ['CIP1','SA1','CIP5','CIP8','CIP9',"SA4",'SA5'];
+      const whiteTextNodes = ['CIP1', 'SA1', 'CIP5', 'CIP8', 'CIP9', "SA4", 'SA5'];
 
       const sankey = d3.sankey()
          .nodeWidth(50)
@@ -274,7 +274,7 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
 
       // 创建 A 和 B 按钮 (在abButtonContainer中)
       const buttonA = abButtonContainer.append('button')
-         .text('A')
+         .text('Fig A')
          .on('click', function () {
             chartDiv.html(''); // 清空之前的图表
             // 移除Sankey按钮容器（如果存在）
@@ -297,6 +297,8 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
                   });
             });
 
+
+
             // 默认显示第一个CIP数据
             if (processedData && processedData.CIP1) {
                drawStackedBarChart(processedData.CIP1, chartDiv);
@@ -311,7 +313,7 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
          });
 
       const buttonB = abButtonContainer.append('button')
-         .text('B')
+         .text('Fig B')
          .on('click', function () {
             chartDiv.html(''); // 清空之前的图表
             cipButtonContainer.html(''); // 清空CIP按钮
