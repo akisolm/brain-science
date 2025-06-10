@@ -91,3 +91,75 @@
   background-color: #2d69a9; /* 选中时的背景颜色 */
   color: white; /* 选中时的文字颜色 */
 }
+
+.switch-buttons {
+    margin-bottom: 20px;
+}
+
+.fig-btn {
+    background: #2c3e50;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    margin: 0 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fig-btn:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+}
+
+.fig-btn.active {
+    background: #1abc9c;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.category-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.category-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.category-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.category-btn.active {
+    opacity: 1;
+}
+
+.category-btn:not(.active) {
+    opacity: 0.5;
+}
+
+.axis-label {
+    font-size: 12px;
+    font-weight: bold;
+    fill: #2c3e50;
+}
+
+.tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
