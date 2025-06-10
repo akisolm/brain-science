@@ -54,7 +54,7 @@ export async function drawFig2(container) {
       border: none;
       border-radius: 4px;
       padding: 8px 16px;
-      margin: 0 8px;
+      margin: 10px 8px 0;
       font-size: 14px;
       cursor: pointer;
       transition: background 0.2s;
