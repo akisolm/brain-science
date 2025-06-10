@@ -1,8 +1,5 @@
 // fig4.js
 
-// Import D3 (if not already globally available or if using modules)
-import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
-
 // Global variables for data and state
 let rawData; // To store the loaded structured data
 let currentGroups = []; // Stores selected SA codes as groups, e.g., [['SA1', 'SA2'], ['SA3']]
@@ -73,7 +70,7 @@ export function drawFig4() {
     // 1. 数据加载
     d3.json('data/fig4_structured.json').then(data => {
         rawData = data;
-        console.log('Fig 4: Data loaded:', rawData);
+        // console.log('Fig 4: Data loaded:', rawData);
 
         // 初始化图表和控制面板
         initializeChart();
@@ -141,11 +138,11 @@ function initializeControlPanel() {
     const allAuthors = new Set();
     const allJournals = new Set();
     
-    console.log("Debugging Authors and Journals data...");
+    // console.log("Debugging Authors and Journals data...");
     rawData.slice(0, 50).forEach((d, i) => { // Log for first 50 records to avoid excessive output
-        console.log(`Record ${i}: Authors type: ${typeof d.Authors}, Journal type: ${typeof d.Journal}`);
-        console.log(`Record ${i}: Authors value:`, d.Authors);
-        console.log(`Record ${i}: Journal value:`, d.Journal);
+        // console.log(`Record ${i}: Authors type: ${typeof d.Authors}, Journal type: ${typeof d.Journal}`);
+        // console.log(`Record ${i}: Authors value:`, d.Authors);
+        // console.log(`Record ${i}: Journal value:`, d.Journal);
 
         // 检查Authors字段是否存在且为数组
         if (d.Authors && Array.isArray(d.Authors)) {
@@ -164,14 +161,8 @@ function initializeControlPanel() {
     const numAuthors = allAuthors.size || 'N/A';
     const numJournals = allJournals.size || 'N/A';
     
-    console.log("Calculated numAuthors:", numAuthors);
-    console.log("Calculated numJournals:", numJournals);
-
-    // 更新统计显示
-    // d3.select('#fig4-stats-pubs').html(`<h2>${numPublications}</h2><p>Publications</p>`);
-    // d3.select('#fig4-stats-auth').html(`<h2>${numAuthors}</h2><p>Authors</p>`);
-    // d3.select('#fig4-stats-journ').html(`<h2>${numJournals}</h2><p>Journals</p>`);
-
+    // console.log("Calculated numAuthors:", numAuthors);
+    // console.log("Calculated numJournals:", numJournals);
 
     // 3. 控制面板初始化
     // 向 #fig4-topic-grid 动态添加六个 <button>
@@ -321,23 +312,23 @@ function updateButtonStates() {
  * Applies the hidden state to chart lines and updates legend item active class.
  */
 function applyHiddenStates() {
-    console.log("Applying hidden states. Current hiddenRegions:", Array.from(hiddenRegions));
+    // console.log("Applying hidden states. Current hiddenRegions:", Array.from(hiddenRegions));
     processedData.forEach(region => {
         const regionName = region.name;
         const regionClassName = regionName.replace(/\s/g, '');
         const targetGroup = svg.select(`.region-group.region-${regionClassName}`); // Select the group
         const legendItem = d3.select(`#fig4-legend-${regionClassName}`); // Select the legend item
 
-        console.log(`Checking region: ${regionName}, targetGroup selected: ${!targetGroup.empty()}, legendItem selected: ${!legendItem.empty()}`);
+        // console.log(`Checking region: ${regionName}, targetGroup selected: ${!targetGroup.empty()}, legendItem selected: ${!legendItem.empty()}`);
 
         if (hiddenRegions.has(regionName)) {
             targetGroup.style("opacity", 0).style("display", "none"); // Hide the line and points
             legendItem.classed("active", true); // Make legend item faded
-            console.log(`Hiding region: ${regionName}`);
+            // console.log(`Hiding region: ${regionName}`);
         } else {
             targetGroup.style("opacity", 0.8).style("display", null); // Show the line and points
             legendItem.classed("active", false); // Make legend item bright
-            console.log(`Showing region: ${regionName}`);
+            // console.log(`Showing region: ${regionName}`);
         }
     });
 }
@@ -364,7 +355,7 @@ function generatePartGroupsToken(groups) {
         return a[0].localeCompare(b[0]);
     });
     
-    console.log("Generated token groups:", allGroups);
+    // console.log("Generated token groups:", allGroups);
     return allGroups;
 }
 
@@ -382,7 +373,7 @@ function renderChart() {
         currentTokenGroups = generatePartGroupsToken(currentGroups);
     }
     
-    console.log("Current token groups:", currentTokenGroups);
+    // console.log("Current token groups:", currentTokenGroups);
     
     // 修复后的数据过滤逻辑
     const filteredData = rawData.filter(row => {
@@ -407,18 +398,18 @@ function renderChart() {
         const matches = JSON.stringify(rowPartGroups) === JSON.stringify(currentTokenGroups);
         
         if (matches) {
-            console.log("Match found:", {
-                rowPartGroups,
-                currentTokenGroups,
-                year: row.Year,
-                region: row.Region
-            });
+            // console.log("Match found:", {
+            //     rowPartGroups,
+            //     currentTokenGroups,
+            //     year: row.Year,
+            //     region: row.Region
+            // });
         }
         
         return matches;
     });
 
-    console.log(`Filtered ${filteredData.length} records from ${rawData.length} total`);
+    // console.log(`Filtered ${filteredData.length} records from ${rawData.length} total`);
 
     // 检查是否有数据
     if (filteredData.length === 0) {
@@ -436,39 +427,39 @@ function renderChart() {
     processedData = []; // Re-initialize global processedData for current render
     const regions = [...new Set(filteredData.map(d => d.Region))];
     
-    console.log("Available regions:", regions);
-    console.log("Sample of filtered data:", filteredData.slice(0, 2));
+    // console.log("Available regions:", regions);
+    // console.log("Sample of filtered data:", filteredData.slice(0, 2));
     
     regions.forEach(region => {
         const regionData = filteredData.filter(d => d.Region === region);
-        console.log(`Processing region ${region}:`, {
-            dataPoints: regionData.length,
-            sample: regionData.slice(0, 2),
-            diversityValues: regionData.map(d => d.Diversity)
-        });
+        // console.log(`Processing region ${region}:`, {
+        //     dataPoints: regionData.length,
+        //     sample: regionData.slice(0, 2),
+        //     diversityValues: regionData.map(d => d.Diversity)
+        // });
         
         const values = regionData.map(d => {
             const year = new Date(d.Year, 0);
             const value = parseFloat(d.Diversity);
-            console.log(`Processing data point:`, {
-                year: d.Year,
-                parsedYear: year,
-                diversity: d.Diversity,
-                parsedValue: value
-            });
+            // console.log(`Processing data point:`, {
+            //     year: d.Year,
+            //     parsedYear: year,
+            //     diversity: d.Diversity,
+            //     parsedValue: value
+            // });
             return {
                 year: year,
                 value: value
             };
         }).filter(d => !isNaN(d.value)).sort((a, b) => a.year - b.year);
         
-        console.log(`Processed values for ${region}:`, {
-            count: values.length,
-            sample: values.slice(0, 2),
-            hasValidValues: values.some(v => !isNaN(v.value)),
-            yearRange: values.length > 0 ? [values[0].year, values[values.length - 1].year] : null,
-            valueRange: values.length > 0 ? [d3.min(values, d => d.value), d3.max(values, d => d.value)] : null
-        });
+        // console.log(`Processed values for ${region}:`, {
+        //     count: values.length,
+        //     sample: values.slice(0, 2),
+        //     hasValidValues: values.some(v => !isNaN(v.value)),
+        //     yearRange: values.length > 0 ? [values[0].year, values[values.length - 1].year] : null,
+        //     valueRange: values.length > 0 ? [d3.min(values, d => d.value), d3.max(values, d => d.value)] : null
+        // });
         
         if (values.length > 0) {
             processedData.push({
@@ -478,7 +469,7 @@ function renderChart() {
         }
     });
 
-    console.log("Final processed data:", processedData);
+    // console.log("Final processed data:", processedData);
 
     // 检查是否有有效数据
     if (processedData.length === 0) {
@@ -495,12 +486,12 @@ function renderChart() {
     const allYears = processedData.flatMap(s => s.values).map(d => d.year);
     const allValues = processedData.flatMap(s => s.values).map(d => d.value);
 
-    console.log("Axis domains:", {
-        years: allYears.length,
-        values: allValues.length,
-        yearRange: [d3.min(allYears), d3.max(allYears)],
-        valueRange: [d3.min(allValues), d3.max(allValues)]
-    });
+    // console.log("Axis domains:", {
+    //     years: allYears.length,
+    //     values: allValues.length,
+    //     yearRange: [d3.min(allYears), d3.max(allYears)],
+    //     valueRange: [d3.min(allValues), d3.max(allValues)]
+    // });
 
     if (allYears.length === 0 || allValues.length === 0) {
         svg.append("text")
@@ -664,14 +655,14 @@ function renderChart() {
 
     legendItems.on("click", function(event, d) {
         const regionName = d.name; // 'd' is the region object, so access name
-        console.log(`Legend click: Toggling region '${regionName}'`);
+        // console.log(`Legend click: Toggling region '${regionName}'`);
 
         if (hiddenRegions.has(regionName)) {
             hiddenRegions.delete(regionName);
-            console.log(`Region '${regionName}' removed from hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
+            // console.log(`Region '${regionName}' removed from hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
         } else {
             hiddenRegions.add(regionName);
-            console.log(`Region '${regionName}' added to hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
+            // console.log(`Region '${regionName}' added to hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
         }
         
         updateAllUI(); // Trigger full UI update including chart redraw and hidden state application
