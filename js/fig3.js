@@ -96,7 +96,7 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
    function drawSankeyDiagrams(chartDiv) {
       const width = 800;
       const height = 400;
-      const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+      const margin = { top: 2, right: 10, bottom: 10, left: 90 };
 
       const svgMono = chartDiv
          .append("svg")
@@ -246,23 +246,34 @@ export function drawFig3(chartDiv, abButtonContainer, cipButtonContainer) {
       });
 
       // 添加桑基图切换按钮
-      const sankeyButtonContainer = d3.select('.chart-area').insert('div', '#chart').attr('class', 'sankey-button-container');
-      sankeyButtonContainer.style('text-align', 'center');
+      // 先尝试选中已有的容器
+      let sankeyButtonContainer = d3.select('.chart-area').select('.sankey-button-container');
 
+      if (sankeyButtonContainer.empty()) {
+      // 如果不存在，再创建新的容器
+      sankeyButtonContainer = d3.select('.chart-area')
+         .insert('div', '#chart')
+         .attr('class', 'sankey-button-container')
+         .style('text-align', 'center');
+
+      // 然后添加按钮
       const sankeyButtons = ['mono-domain', 'cross-domain', 'difference'];
       sankeyButtons.forEach((buttonText, index) => {
          const button = sankeyButtonContainer.append('button')
             .text(buttonText)
             .on('click', function () {
-               chartDiv.selectAll('svg').style('display', 'none');
-               chartDiv.selectAll('svg').filter((d, i) => i === index).style('display', 'block');
-               sankeyButtonContainer.selectAll('button').classed('selected', false);
-               d3.select(this).classed('selected', true);
+            chartDiv.selectAll('svg').style('display', 'none');
+            chartDiv.selectAll('svg').filter((d, i) => i === index).style('display', 'block');
+            sankeyButtonContainer.selectAll('button').classed('selected', false);
+            d3.select(this).classed('selected', true);
             });
+
          if (index === 0) {
             button.classed('selected', true);
          }
       });
+      }
+
 
       chartDiv.selectAll('svg').filter((d, i) => i > 0).style('display', 'none');
    }
