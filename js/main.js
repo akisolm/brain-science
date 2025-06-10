@@ -107,7 +107,15 @@ function showFig4() {
 
   // Show Fig4's specific elements and update their content
   d3.select('#fig4-title').text('How Do Topic-Fusion Strategies Shape Brain-Science Diversity?').style('display', 'block');
-  d3.select('#fig4-viz-wrapper').style('display', 'flex');
+  
+  // Apply fade-in animation to fig4-viz-wrapper
+  d3.select('#fig4-viz-wrapper')
+    .style('opacity', 0) // Start with opacity 0
+    .style('display', 'flex') // Ensure it's displayed as flex
+    .transition()
+    .duration(500) // 500ms fade-in duration
+    .style('opacity', 1); // Fade to full opacity
+
   d3.select('#fig4-story-block').style('display', 'block');
   showExplan(d3.select('#fig4-story-block'), explan4); // Update Fig4's specific explanation
 
