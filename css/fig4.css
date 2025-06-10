@@ -67,21 +67,19 @@
 
 .fig4-preset-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(3, 1fr); /* Changed to explicitly 3 columns to ensure all presets are in one row */
     gap: 8px;
 }
 
 /* Base button styles - shared properties */
 .fig4-topic-btn, #fig4-create-btn, #fig4-clear-btn, .fig4-preset-btn {
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 10px 5px; /* Explicitly set horizontal padding for all buttons */
+  border-radius: 8px; /* Slightly increase for softer corners */
   cursor: pointer;
-  font-size: 0.95em;
+  font-size: 0.8em; /* Adjusted font size for readability and fit */
   transition: all 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
   text-align: center;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle initial shadow */
 }
 
 /* Topic Buttons - specific styles */
@@ -94,6 +92,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap; /* Prevent topic button text from wrapping */
+  text-transform: none; /* Ensure text is not forced to uppercase */
 }
 
 .fig4-topic-btn:hover {
@@ -144,50 +144,80 @@
 #fig4-create-btn {
   background-color: #4CAF50; /* Green for create */
   color: white;
-  border: 1px solid #4CAF50;
+  border: none; /* Remove border to rely on box-shadow for depth */
   font-weight: bold;
-  text-transform: uppercase;
+  font-size: 0.8em; /* Adjusted font size for readability and fit */
+  white-space: normal; /* Allow text to wrap for CREATE COMBINATION */
+  text-transform: none; /* Ensure text is not forced to uppercase */
 }
 
 #fig4-create-btn:hover {
   background-color: #45a049;
-  transform: translateY(-2px); /* Subtle lift effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 
 #fig4-clear-btn {
   background-color: #f44336; /* Red for clear */
   color: white;
-  border: 1px solid #f44336;
+  border: none; /* Remove border */
   font-weight: bold;
-  text-transform: uppercase;
+  font-size: 0.8em; /* Adjusted font size for readability and fit */
+  white-space: nowrap !important; /* Prevent text from wrapping for CLEAR with !important */
+  text-transform: none; /* Ensure text is not forced to uppercase */
 }
 
 #fig4-clear-btn:hover {
   background-color: #da190b;
-  transform: translateY(-2px); /* Subtle lift effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+/* New styles for the action buttons row to match preset button width and distribute space */
+.fig4-action-buttons-row {
+  display: flex;
+  gap: 0; /* No gap between CREATE and CLEAR buttons */
+  width: 100%; /* Ensure it spans the full width of its parent's content area */
+  margin: 0 auto; /* Center the button row */
+  margin-bottom: 1rem; /* Add some bottom margin */
+}
+
+.fig4-action-buttons-row #fig4-create-btn {
+  flex-grow: 1; /* Allows CREATE button to grow */
+  width: auto; /* Allow flex-grow to take effect */
+  min-width: 0; /* Allow button to shrink below content size if needed */
+}
+
+.fig4-action-buttons-row #fig4-clear-btn {
+  flex-grow: 2.5; /* Allows CLEAR button to grow more and be longer */
+  width: auto; /* Allow flex-grow to take effect */
+  min-width: 0; /* Allow button to shrink below content size if needed */
 }
 
 /* Preset Buttons - specific styles */
 .fig4-preset-btn {
-  border: 1px solid #6c757d; /* Darker grey border */
-  background-color: white; /* White background for inactive */
-  color: #343a40; /* Dark text */
-  /* Removed font-style: italic; */
+  border: 1px solid #ccc; /* Lighter grey border for inactive */
+  background-color: white;
+  color: #343a40;
+  font-weight: normal; /* Less bold for inactive presets */
+  font-size: 0.8em; /* Ensure font size is consistent with general buttons */
+  padding: 10px 5px; /* Explicitly set horizontal padding for preset buttons */
+  white-space: nowrap; /* Prevent preset button text from wrapping */
+  text-transform: none; /* Ensure text is not forced to uppercase */
 }
 
 .fig4-preset-btn:hover {
-  background-color: #e2e6ea;
-  transform: translateY(-2px); /* Subtle lift effect */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+  background-color: #f0f0f0; /* Slightly darker grey on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly more prominent shadow on hover */
 }
 
 .fig4-preset-btn.active {
   background-color: #2563eb; /* Primary blue for active preset */
   color: white;
   border-color: #2563eb;
-  font-weight: bold;
+  font-weight: bold; /* Keep bold for active */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Stronger shadow for active */
 }
 
 /* 3. 图例 */
@@ -211,17 +241,32 @@
 
 /* 4. StoryBlock */
 #fig4-story-block {
-  margin-top: 30px;
-  padding: 15px;
+  margin-top: 1.5rem; /* 从 30px 改为 1.5rem，与 #explanation 统一 */
+  padding: 1rem 2rem; /* 从 15px 改为 1rem 2rem，与 #explanation 统一 */
   background-color: #f9f9f9;
   border: 1px solid #eee;
   border-radius: 8px;
   line-height: 1.6;
-  font-size: 1.0em;
+  font-size: 17px; /* 从 1.0em 改为 17px，与 #explanation 统一 */
+  color: #333; /* 与 #explanation 统一 */
+  text-align: justify; /* 与 #explanation 统一 */
+  text-justify: inter-character; /* 与 #explanation 统一 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 与 #explanation 统一 */
+  text-indent: 2em; /* 与 #explanation 统一 */
+  display: block; /* 确保是块级元素 */
+  width: 100%;
+  max-width: 950px; /* 与 #explanation 统一 */
+  margin-left: auto; /* 用于居中 */
+  margin-right: auto; /* 用于居中 */
 }
 
 #fig4-title {
-    margin-bottom: 1.5rem; /* Add spacing below the main title */
+    margin-bottom: 1.5rem; /* 保持不变 */
+    color: var(--primary-color, #2f4f6f); /* 与 #chart-title 统一 */
+    text-align: center; /* 与 #chart-title 统一 */
+    margin-top: 0; /* 与 #chart-title 统一 */
+    font-size: 24px; /* 匹配 text-2xl */
+    font-weight: bold; /* 匹配 font-bold */
 }
 
 #fig4-story-block p {
@@ -312,4 +357,10 @@
 
 .fig4-data-point:hover {
   r: 6; /* Increase circle size on hover */
+}
+
+/* New class for hidden lines */
+.region-line.hidden-line {
+  opacity: 0;
+  display: none;
 } 

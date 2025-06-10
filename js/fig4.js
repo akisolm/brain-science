@@ -8,6 +8,8 @@ let rawData; // To store the loaded structured data
 let currentGroups = []; // Stores selected SA codes as groups, e.g., [['SA1', 'SA2'], ['SA3']]
 let selectedPendingTopics = new Set(); // For topics clicked but not yet grouped
 let activePreset = null; // Tracks the currently active preset (e.g., 'broad', 'neighbor', 'distant')
+let hiddenRegions = new Set(); // To track which regions are hidden by legend clicks
+let processedData = []; // Declared as a global variable
 
 // Constants
 const ALL_CODES = ['SA1', 'SA2', 'SA3', 'SA4', 'SA5', 'SA6'];
@@ -58,8 +60,9 @@ const LINE_COLORS = {
 // D3 chart setup (global for easier access within render function)
 let svg, x, y, line;
 let tooltip;
+let lineGenerator; // Changed to let to allow reassignment
 const margin = { top: 20, right: 120, bottom: 30, left: 60 };
-const width = 650 - margin.left - margin.right; // Matches CSS .fig4-chart-container width
+const width = 800 - margin.left - margin.right; // Adjusted width based on new layout
 const height = 450 - margin.top - margin.bottom; // Matches CSS .fig4-chart-container height
 
 
@@ -266,6 +269,7 @@ function initializeControlPanel() {
 function updateAllUI() {
     updateButtonStates();
     renderChart();
+    applyHiddenStates(); // Apply hidden states after chart is rendered
     // Update story block based on active preset, if any
     updateStoryBlock(activePreset ? PRESET_DEFINITIONS[activePreset].text : '');
 }
@@ -313,6 +317,30 @@ function updateButtonStates() {
     }
 }
 
+/**
+ * Applies the hidden state to chart lines and updates legend item active class.
+ */
+function applyHiddenStates() {
+    console.log("Applying hidden states. Current hiddenRegions:", Array.from(hiddenRegions));
+    processedData.forEach(region => {
+        const regionName = region.name;
+        const regionClassName = regionName.replace(/\s/g, '');
+        const targetGroup = svg.select(`.region-group.region-${regionClassName}`); // Select the group
+        const legendItem = d3.select(`#fig4-legend-${regionClassName}`); // Select the legend item
+
+        console.log(`Checking region: ${regionName}, targetGroup selected: ${!targetGroup.empty()}, legendItem selected: ${!legendItem.empty()}`);
+
+        if (hiddenRegions.has(regionName)) {
+            targetGroup.style("opacity", 0).style("display", "none"); // Hide the line and points
+            legendItem.classed("active", true); // Make legend item faded
+            console.log(`Hiding region: ${regionName}`);
+        } else {
+            targetGroup.style("opacity", 0.8).style("display", null); // Show the line and points
+            legendItem.classed("active", false); // Make legend item bright
+            console.log(`Showing region: ${regionName}`);
+        }
+    });
+}
 
 /**
  * Generates the PartGroups token for filtering data.
@@ -400,11 +428,12 @@ function renderChart() {
             .attr("text-anchor", "middle")
             .style("font-size", "14px")
             .text("No data available for this grouping combination.");
+        processedData = []; // Clear processed data if no filtered data
         return;
     }
 
-    // 处理数据
-    const processedData = [];
+    // Process data for lines
+    processedData = []; // Re-initialize global processedData for current render
     const regions = [...new Set(filteredData.map(d => d.Region))];
     
     console.log("Available regions:", regions);
@@ -529,7 +558,7 @@ function renderChart() {
         .attr("data-region", d => d.name);
 
     // 定义线条生成器
-    const lineGenerator = d3.line()
+    lineGenerator = d3.line()
         .x(d => x(d.year))
         .y(d => y(d.value))
         .curve(d3.curveMonotoneX);
@@ -586,7 +615,7 @@ function renderChart() {
     // 添加图例
     const legend = svg.append("g")
         .attr("class", "fig4-legend-box")
-        .attr("transform", `translate(20, 0)`);
+        .attr("transform", `translate(20, 20)`); // Position legend to top-left
 
     // 添加图例背景
     const legendBackground = legend.append("rect")
@@ -601,10 +630,11 @@ function renderChart() {
 
     // 创建图例项
     const legendItems = legend.selectAll(".legend-item")
-        .data(processedData)
+        .data(processedData) // Bind data to the processedData directly
         .enter()
         .append("g")
         .attr("class", "legend-item")
+        .attr("id", d => `fig4-legend-${d.name.replace(/\s/g, '')}`) // Add ID here for easier selection
         .attr("transform", (d, i) => `translate(0, ${i * 20})`)
         .style("cursor", "pointer");
 
@@ -632,32 +662,19 @@ function renderChart() {
         .attr("width", legendBBox.width + 10)
         .attr("height", legendBBox.height + 10);
 
-    // Add click event for legend items to toggle line and data point visibility
     legendItems.on("click", function(event, d) {
-        const regionName = d; // 'd' is the region name directly
-        const regionGroupName = regionName.replace(/\s/g, ''); // Get cleaned region name for class
-        const targetGroup = svg.select(`.region-group.region-${regionGroupName}`);
-        
-        // Check the current opacity to determine if it's hidden (opacity 0)
-        const isCurrentlyHidden = targetGroup.style("opacity") === "0";
+        const regionName = d.name; // 'd' is the region object, so access name
+        console.log(`Legend click: Toggling region '${regionName}'`);
 
-        if (isCurrentlyHidden) {
-            // If currently hidden, show it
-            targetGroup.style("display", null); // Make sure it's visible for transition
-            targetGroup.transition()
-                .duration(200)
-                .style("opacity", 0.8); // Fade in to its default opacity
-            d3.select(this).classed("active", false); // Remove 'active' class from legend item
+        if (hiddenRegions.has(regionName)) {
+            hiddenRegions.delete(regionName);
+            console.log(`Region '${regionName}' removed from hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
         } else {
-            // If currently visible, hide it
-            targetGroup.transition()
-                .duration(200)
-                .style("opacity", 0) // Fade out
-                .on("end", function() {
-                    d3.select(this).style("display", "none"); // Once faded, set display to 'none'
-                });
-            d3.select(this).classed("active", true); // Add 'active' class to legend item (to make it faded)
+            hiddenRegions.add(regionName);
+            console.log(`Region '${regionName}' added to hiddenRegions. Current hiddenRegions:`, Array.from(hiddenRegions));
         }
+        
+        updateAllUI(); // Trigger full UI update including chart redraw and hidden state application
     });
 }
 
