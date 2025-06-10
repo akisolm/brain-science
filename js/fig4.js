@@ -119,16 +119,12 @@ function initializeChart() {
         .y(d => y(d.value))
         .defined(d => !isNaN(d.value) && d.value !== null);
 
-    // Initialize tooltip
+    // Initialize tooltip - ensuring it uses the correct class from CSS
     tooltip = d3.select("body").append("div")
-        .attr("class", "fig4-tooltip") // Use a specific class for fig4 tooltip
+        .attr("class", "fig4-tooltip") // Use the class defined in CSS
         .style("opacity", 0)
         .style("position", "absolute")
-        .style("background-color", "rgba(255, 255, 255, 0.9)")
-        .style("border", "1px solid #ccc")
-        .style("padding", "8px")
-        .style("border-radius", "4px")
-        .style("pointer-events", "none");
+        .style("pointer-events", "none"); // Ensure it doesn't block mouse events
 }
 
 /**
@@ -524,68 +520,75 @@ function renderChart() {
         .attr("x", -height / 2)
         .text("Diversity");
 
-    // 添加线条
-    const lineGroup = svg.append("g")
-        .attr("class", "fig4-lines");
-
-    // 定义线条生成器
-    const line = d3.line()
-        .x(d => x(d.year))
-        .y(d => y(d.value))
-        .curve(d3.curveMonotoneX); // 使用平滑曲线
-
-    console.log("Drawing lines for regions:", regions);
-
-    lineGroup.selectAll(".fig4-line")
+    // 添加线条的组（为每个区域创建一个组）
+    const regionGroups = svg.selectAll(".region-group")
         .data(processedData)
         .enter()
-        .append("path")
+        .append("g")
+        .attr("class", d => `region-group region-${d.name.replace(/\s/g, '')}`)
+        .attr("data-region", d => d.name);
+
+    // 定义线条生成器
+    const lineGenerator = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.value))
+        .curve(d3.curveMonotoneX);
+
+    // 在每个区域组中添加折线
+    regionGroups.append("path")
         .attr("class", "fig4-line")
-        .attr("d", d => {
-            console.log(`Drawing line for ${d.name}:`, {
-                points: d.values.length,
-                sample: d.values.slice(0, 2),
-                path: line(d.values)
-            });
-            return line(d.values);
-        })
+        .attr("d", d => lineGenerator(d.values))
         .style("stroke", d => LINE_COLORS[d.name])
         .style("fill", "none")
         .style("stroke-width", 2.5)
-        .style("opacity", 0.8);
-
-    // 添加交互
-    lineGroup.selectAll(".fig4-line")
-        .on("mouseover", function(event, d) {
-            tooltip.style("opacity", 1);
-            d3.select(this)
-                .style("stroke-width", 3.5)
-                .style("opacity", 1);
+        .style("opacity", 0.8)
+        .on("mouseover", function(event, d_region) {
+            d3.select(this).style('stroke-width', 3.5); // 鼠标悬停在线条上时加粗
+            showTooltip(event, d_region); // 调用统一的 showTooltip，dataPoint 为空
         })
-        .on("mousemove", function(event, d) {
-            const [xPos, yPos] = d3.pointer(event);
-            const year = x.invert(xPos);
-            const closestData = d.values.reduce((prev, curr) => {
-                return (Math.abs(curr.year - year) < Math.abs(prev.year - year) ? curr : prev);
-            });
-
-            tooltip.html(`Region: ${d.name}<br/>Year: ${d3.timeFormat("%Y")(closestData.year)}<br/>Diversity: ${closestData.value.toFixed(3)}`)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 20) + "px");
+        .on("mousemove", function(event, d_region) {
+            moveTooltip(event, d_region); // 调用统一的 moveTooltip，dataPoint 为空
         })
         .on("mouseout", function() {
-            tooltip.style("opacity", 0);
-            d3.select(this)
-                .style("stroke-width", 2.5)
-                .style("opacity", 0.8);
+            d3.select(this).style('stroke-width', 2.5); // 鼠标移出线条时恢复粗细
+            hideTooltip();
         });
 
-    // Add Legend
+    // 在每个区域组中添加数据点
+    regionGroups.selectAll(".fig4-data-point")
+        .data(d => d.values)
+        .enter()
+        .append("circle")
+        .attr("class", "fig4-data-point")
+        .attr("cx", d_point => x(d_point.year))
+        .attr("cy", d_point => y(d_point.value))
+        .attr("r", 4)
+        .style("fill", function() {
+            // 从父级g元素中获取区域名称
+            return LINE_COLORS[d3.select(this.parentNode).datum().name];
+        })
+        .style("stroke", "#fff")
+        .style("stroke-width", 1.5)
+        .on("mouseover", function(event, d_point) {
+            d3.select(this).attr("r", 6); // 鼠标悬停在点上时放大
+            const d_region = d3.select(this.parentNode).datum(); // 获取父级g元素绑定的区域数据
+            showTooltip(event, d_region, d_point); // Pass both region and data point
+        })
+        .on("mousemove", function(event, d_point) {
+            const d_region = d3.select(this.parentNode).datum(); // 获取父级g元素绑定的区域数据
+            moveTooltip(event, d_region, d_point); // Pass both region and data point
+        })
+        .on("mouseout", function() {
+            d3.select(this).attr("r", 4); // 鼠标移出点时恢复大小
+            hideTooltip();
+        });
+
+    // 添加图例
     const legend = svg.append("g")
         .attr("class", "fig4-legend-box")
-        .attr("transform", `translate(20, 0)`); // Position legend at top-left, shifted right
+        .attr("transform", `translate(20, 0)`);
 
-    // Add a semi-transparent background for the legend
+    // 添加图例背景
     const legendBackground = legend.append("rect")
         .attr("x", -5)
         .attr("y", -5)
@@ -596,147 +599,67 @@ function renderChart() {
         .style("stroke", "#ccc")
         .style("stroke-width", 0.5);
 
-    // Create legend items
+    // 创建图例项
     const legendItems = legend.selectAll(".legend-item")
         .data(processedData)
         .enter()
         .append("g")
         .attr("class", "legend-item")
-        .attr("transform", (d, i) => `translate(0, ${i * 20})`);
+        .attr("transform", (d, i) => `translate(0, ${i * 20})`)
+        .style("cursor", "pointer");
 
-    // Add color boxes
+    // 添加颜色框
     legendItems.append("rect")
         .attr("width", 10)
         .attr("height", 10)
-        .style("fill", d => LINE_COLORS[d.name]) // Correctly assign color from LINE_COLORS
-        .style("stroke", "none"); // Ensure no stroke is interfering
+        .style("fill", d => LINE_COLORS[d.name])
+        .style("stroke", "none");
 
-    // Add labels
+    // 添加标签
     legendItems.append("text")
-        .attr("x", 15)
-        .attr("y", 9)
+        .attr("x", 25) // Adjusted x for text, allowing space for rect
+        .attr("y", 9.5)
+        .attr("dy", "0.32em")
+        .style("text-anchor", "start") // Ensured text is left-aligned with rect
         .text(d => d.name)
         .style("alignment-baseline", "middle")
         .style("font-size", "12px")
         .style("fill", "#333");
 
-    // Adjust legend background size
+    // 调整图例背景大小
     const legendBBox = legend.node().getBBox();
     legendBackground
         .attr("width", legendBBox.width + 10)
         .attr("height", legendBBox.height + 10);
 
-    // Add click interaction to legend items
+    // Add click event for legend items to toggle line and data point visibility
     legendItems.on("click", function(event, d) {
-        const isActive = d3.select(this).classed("active");
-        d3.select(this).classed("active", !isActive);
+        const regionName = d; // 'd' is the region name directly
+        const regionGroupName = regionName.replace(/\s/g, ''); // Get cleaned region name for class
+        const targetGroup = svg.select(`.region-group.region-${regionGroupName}`);
         
-        // Update line visibility
-        lineGroup.selectAll(".fig4-line")
-            .filter(line => line.name === d.name)
-            .style("opacity", isActive ? 0.8 : 0.2);
-    });
+        // Check the current opacity to determine if it's hidden (opacity 0)
+        const isCurrentlyHidden = targetGroup.style("opacity") === "0";
 
-    // Add brush functionality
-    // (Existing brush implementation - ensure it references global scales)
-    const brush = d3.brushX()
-        .extent([[0, 0], [width, height]])
-        .on("end", brushed);
-
-    svg.append("g")
-        .attr("class", "fig4-brush") // Use specific class
-        .call(brush);
-}
-
-
-/**
- * Brush function for zooming.
- */
-function brushed(event) {
-    // Placeholder - implement brush logic as needed based on Fig 4 requirements
-    // For now, it will simply re-render the chart with new domain
-    if (!event.selection) {
-        // If no selection, reset to original domain (re-fetch min/max from full data)
-        const allYears = rawData.flatMap(d => {
-            // Need to apply the same PartGroups filter to rawData to get allYears/allValues for the current combination
-            const currentTokenGroups = generatePartGroupsToken(currentGroups);
-            
-            const rowPartGroups = d.PartGroups.map(group => {
-                if (Array.isArray(group)) {
-                    return group.slice().sort();
-                }
-                return String(group).split('|').sort();
-            }).sort((a, b) => {
-                if (a.length !== b.length) return a.length - b.length;
-                return a.join('|').localeCompare(b.join('|'));
-            });
-            const rowToken = JSON.stringify(rowPartGroups);
-            const currentToken = JSON.stringify(currentTokenGroups);
-
-            if (rowToken === currentToken) {
-                const year = d3.timeParse("%Y")(d.Year);
-                return year ? [year] : [];
-            }
-            return [];
-        });
-        
-        const allValues = Object.keys(LINE_COLORS).flatMap(region =>
-            rawData.flatMap(d => {
-                // Need to apply the same PartGroups filter to rawData
-                const currentTokenGroups = generatePartGroupsToken(currentGroups);
-
-                const rowPartGroups = d.PartGroups.map(group => {
-                    if (Array.isArray(group)) {
-                        return group.slice().sort();
-                    }
-                    return String(group).split('|').sort();
-                }).sort((a, b) => {
-                    if (a.length !== b.length) return a.length - b.length;
-                    return a.join('|').localeCompare(b.join('|'));
-                });
-                const rowToken = JSON.stringify(rowPartGroups);
-                const currentToken = JSON.stringify(currentTokenGroups);
-
-                if (rowToken === currentToken) {
-                    const value = +d[region];
-                    return (value !== null && !isNaN(value)) ? [value] : [];
-                }
-                return [];
-            })
-        );
-
-        if (allYears.length > 0) x.domain(d3.extent(allYears));
-        if (allValues.length > 0) y.domain([d3.min(allValues) * 0.9, d3.max(allValues) * 1.1]);
-        else y.domain([0, 1]); // Fallback
-        
-    } else {
-        // Apply brush extent
-        x.domain([x.invert(event.selection[0]), x.invert(event.selection[1])]);
-        // Recalculate y domain based on visible data
-        const visibleData = rawData.filter(d => {
-            const year = d3.timeParse("%Y")(d.Year);
-            return year >= x.domain()[0] && year <= x.domain()[1];
-        });
-        const visibleValues = Object.keys(LINE_COLORS).flatMap(region =>
-            visibleData.map(d => +d[region]).filter(val => val !== null && !isNaN(val))
-        );
-
-        if (visibleValues.length > 0) {
-            y.domain([d3.min(visibleValues) * 0.9, d3.max(visibleValues) * 1.1]);
+        if (isCurrentlyHidden) {
+            // If currently hidden, show it
+            targetGroup.style("display", null); // Make sure it's visible for transition
+            targetGroup.transition()
+                .duration(200)
+                .style("opacity", 0.8); // Fade in to its default opacity
+            d3.select(this).classed("active", false); // Remove 'active' class from legend item
         } else {
-            y.domain([0, 1]); // Fallback if no visible data
+            // If currently visible, hide it
+            targetGroup.transition()
+                .duration(200)
+                .style("opacity", 0) // Fade out
+                .on("end", function() {
+                    d3.select(this).style("display", "none"); // Once faded, set display to 'none'
+                });
+            d3.select(this).classed("active", true); // Add 'active' class to legend item (to make it faded)
         }
-    }
-
-    // Update axes and lines
-    svg.select(".x-axis").transition().duration(500).call(d3.axisBottom(x).tickFormat(d3.timeFormat("%Y")).ticks(d3.timeYear.every(3)));
-    svg.select(".y-axis").transition().duration(500).call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(".2f")));
-
-    svg.selectAll(".fig4-line")
-        .transition().duration(500)
-        .attr("d", d => line(d.values));
+    });
 }
-
 
 /**
  * Updates the #fig4-story-block with the abstract and optional preset text.
@@ -748,4 +671,65 @@ function updateStoryBlock(presetText = '') {
     
     // Always write the abstract first
     storyBlock.html(`<p>${abstract}</p>${presetText ? `<p>${presetText}</p>` : ''}`);
+}
+
+// Helper functions for tooltip management
+function showTooltip(event, regionData, dataPoint) {
+    tooltip.transition()
+        .duration(200)
+        .style("opacity", .9)
+        .style("display", "block"); // Ensure it's displayed
+
+    updateTooltipContent(event, regionData, dataPoint);
+}
+
+function moveTooltip(event, regionData, dataPoint) {
+    updateTooltipContent(event, regionData, dataPoint);
+}
+
+function hideTooltip() {
+    tooltip.transition()
+        .duration(500)
+        .style("opacity", 0)
+        .style("display", "none"); // Hide it completely
+}
+
+function updateTooltipContent(event, regionData, dataPoint) {
+    // Use dataPoint if available, otherwise find closest on line
+    const displayData = dataPoint || (() => {
+        const [mx, my] = d3.pointer(event);
+        const year = x.invert(mx);
+        const bisect = d3.bisector(d => d.year).left;
+        const idx = bisect(regionData.values, year, 1);
+        const d0 = regionData.values[idx - 1];
+        const d1 = regionData.values[idx];
+        return (d1 && year - d0.year > d1.year - year) ? d1 : d0;
+    })();
+
+    if (displayData && displayData.year && !isNaN(displayData.value)) {
+        const topicCombo = currentGroups.map(g => g.join(' + ')).join(', ');
+        tooltip.html(`
+            <div class="fig4-tooltip-title">${regionData.name}</div>
+            <div class="fig4-tooltip-content">
+                <div class="fig4-tooltip-row">
+                    <span class="fig4-tooltip-label">Year:</span>
+                    <span class="fig4-tooltip-value">${d3.timeFormat("%Y")(displayData.year)}</span>
+                </div>
+                <div class="fig4-tooltip-row">
+                    <span class="fig4-tooltip-label">Diversity:</span>
+                    <span class="fig4-tooltip-value">${displayData.value.toFixed(3)}</span>
+                </div>
+                <div class="fig4-tooltip-row">
+                    <span class="fig4-tooltip-label">Topics:</span>
+                    <span class="fig4-tooltip-value">${topicCombo}</span>
+                </div>
+            </div>
+        `); // 确保模板字符串正确结束
+        
+        tooltip
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
+    } else {
+        hideTooltip(); // Hide if data is invalid
+    }
 }

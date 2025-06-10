@@ -206,7 +206,7 @@
 }
 
 .legend-item.active {
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
 /* 4. StoryBlock */
@@ -250,4 +250,66 @@
   .fig4-control-panel {
     width: 100%; /* Full width */
   }
+}
+
+/* 5. Tooltip Styles */
+.fig4-tooltip {
+  position: absolute;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  font-size: 13px;
+  line-height: 1.4;
+  z-index: 1000;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  display: none;
+}
+
+.fig4-tooltip.visible {
+  opacity: 1;
+  display: block;
+}
+
+.fig4-tooltip-title {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 6px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+.fig4-tooltip-content {
+  color: #666;
+}
+
+.fig4-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  min-width: 200px;
+}
+
+.fig4-tooltip-label {
+  color: #888;
+  margin-right: 8px;
+}
+
+.fig4-tooltip-value {
+  font-weight: 500;
+  color: #333;
+}
+
+/* Add hover effect for data points */
+.fig4-data-point {
+  cursor: pointer;
+  transition: r 0.2s ease;
+}
+
+.fig4-data-point:hover {
+  r: 6; /* Increase circle size on hover */
 } 
