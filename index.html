@@ -7,8 +7,8 @@
   <title>Brain Science Data Visualization</title>
   <link rel="icon" href="img/logo.png" type="image/png">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/style_development.css">
-  <link rel="stylesheet" href="css/fig4.css">
+  <link rel="stylesheet" href="css/style_fig3.css">
+  <link rel="stylesheet" href="css/style_fig4.css">
 </head>
 <body>
 
@@ -23,8 +23,8 @@
     <button id="btn4">Diversity</button>
   </div>
 
-  <!-- Main content area where different figures are displayed -->
   <div class="main-content">
+
     <div class="stats">
       <div class="stat-card">
         <h2>655,386</h2>
@@ -45,15 +45,14 @@
       <div id="ab-button-placeholder"></div>
       <div id="cip-button-placeholder"></div>
       
-      <div id="chart"></div> <!-- Global chart div, used by Fig1, Fig2, Fig3 -->
+      <div id="chart"></div>
 
       <div id="explanation"></div>
 
-      <!-- Content for Fig4 moved inside chart-area -->
+      <!-- Fig.4 Part -->
       <h2 id="fig4-title" class="text-2xl font-bold mb-2" style="display:none;">
         How Do Topic-Fusion Strategies Shape Brain-Science Diversity?
       </h2>
-      <!-- Main area: Chart + Control Panel -->
       <div id="fig4-viz-wrapper" class="flex" style="display:none;">
         <div id="fig4-chart-container" class="w-2/3">
           <svg id="fig4-chart-svg"></svg>
@@ -67,35 +66,15 @@
           <div id="fig4-preset-grid" class="grid grid-cols-3 gap-2"></div>
         </aside>
       </div>
-      <!-- Text narrative -->
       <section id="fig4-story-block" class="mt-6 prose max-w-3xl" style="display:none;"></section>
+
     </div>
   </div>
-
-  <!-- NEW SECTION FOR FIG4 -->
-  <!-- 
-  <section id="fig4-section" style="display:none;">
-    <div id="fig4-stats" class="flex space-x-4 mb-4"></div>
-    <h2 id="fig4-title" class="text-2xl font-bold mb-2">How Do Topic-Fusion Strategies Shape Brain-Science Diversity?</h2>
-    <div id="fig4-viz-wrapper" class="flex">
-      <div id="fig4-chart-container" class="w-2/3">
-        <svg id="fig4-chart-svg"></svg>
-      </div>
-      <aside id="fig4-control-panel" class="w-1/3 p-4 bg-white shadow">
-        <div id="fig4-topic-grid" class="grid grid-cols-2 gap-2 mb-4"></div>
-        <button id="fig4-create-btn" class="mb-2 w-full">CREATE COMBINATION</button>
-        <button id="fig4-clear-btn"  class="mb-4 w-full">CLEAR</button>
-        <div id="fig4-preset-grid" class="grid grid-cols-3 gap-2"></div>
-      </aside>
-    </div>
-    <section id="fig4-story-block" class="mt-6 prose max-w-3xl"></section>
-  </section>
-  -->
 
   <div id="tooltip"></div>
 
   <script src="js/d3.min.js"></script>
-  <script type="module" src="js/main.js"></script>
   <script src="https://unpkg.com/d3-sankey@0"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
